@@ -1,22 +1,21 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js ";
-import gsap from "gsap";
-import { GUI } from "dat.gui";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import gsap from "gsap";
 //3D-MODELS
-const galaxy = new URL("./assets/need_some_space.glb", import.meta.url);
+//const galaxy = new URL("./assets/scene.gltf", import.meta.url);
 //RENDERER & CONTAINERS
-const renderer = new THREE.WebGL1Renderer();
-const container = document.querySelector(".main-container");
-renderer.setSize(window.innerWidth, window.innerHeight);
+//const renderer = new THREE.WebGL1Renderer();
+//const container = document.querySelector(".main-container");
+//renderer.setSize(window.innerWidth, window.innerHeight);
 
-container.appendChild(renderer.domElement);
+//container.appendChild(renderer.domElement);
+
+// Canvas
+const canvas = document.querySelector("canvas");
 
 //scene
 const scene = new THREE.Scene();
-
-//GUI
-const gui = new GUI();
 
 //camera
 const camera = new THREE.PerspectiveCamera(
@@ -25,36 +24,36 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.set(5, 5, -5);
-camera.lookAt(0, 1.2, 0);
+//Initial position
+camera.position.set(5, 5, 5);
+camera.rotation.set(-0.9, -0.8, -0.8);
+//camera.lookAt(0, 1.2, 0);
 
-//models & textures
+// Renderer
+const renderer = new THREE.WebGLRenderer({
+  canvas: canvas,
+});
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+//Orbit Controls
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+
+//models & textures loader
 const assetLoader = new GLTFLoader();
-//const textureLoader = new THREE.TextureLoader();
-//const alienPlanetTexture = textureLoader.load(
-//  "./Assets/Planet 1/textures/Planet_baseColor.png"
-//);
-
 //galaxy
-assetLoader.load(galaxy.href, function (gtlf) {
-  const model = gtlf.scene;
-  model.position.y = 0.1;
+assetLoader.load("./Assets/scene.gltf", (gltf) => {
+  console.log("Our model here!", gltf);
+  const model = gltf.scene;
   scene.add(model);
+
+  window.addEventListener("mouseup"),
+    function () {
+      console.log(camera.position);
+      console.log(camera.rotation);
+    };
 });
 /*
-//planets
-//AlienPlanet
-assetLoader.load("./Assets/Planet 1/alien_planet.glb", (gtlf) => {
-  console.log("success");
-  const alienPlanet = gtlf.scene;
-  const meshMaterial = new THREE.MeshStandardMaterial({
-    map: alienPlanetTexture,
-  });
-  alienPlanet.scale.set(0.3, 0.3, 0.3);
-  alienPlanet.position.y = 0.3;
-  scene.add(alienPlanet);
-});*/
-
 //camera movementes
 let position = 0;
 let items = document.querySelectorAll(".page");
@@ -119,7 +118,7 @@ function elemViewer() {
     }
   }
 }
-
+*/
 //Renderer
 function animate() {
   renderer.render(scene, camera);
@@ -130,6 +129,3 @@ window.addEventListener("resize", function () {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
-//Controls
-const controls = new OrbitControls(camera, canvas);

@@ -42,10 +42,11 @@ controls.enableDamping = true;
 //models & textures loader
 const assetLoader = new GLTFLoader();
 //galaxy
-assetLoader.load("./Assets/scene.gltf", (gltf) => {
+assetLoader.load("./Assets/need_some_space.glb", (gltf) => {
   console.log("Our model here!", gltf);
-  const model = gltf.scene;
-  scene.add(model);
+  const galaxyModel = gltf.scene;
+  galaxyModel.scale.set(1, 1, 1);
+  scene.add(galaxyModel);
 
   window.addEventListener("mouseup"),
     function () {
